@@ -1,5 +1,5 @@
-class ArtsController < ApplicationController
-  before_action :set_art, only: %i[ show update destroy ]
+class Api::V1::ArtsController < ApplicationController
+  before_action :set_art, only: %i[show update destroy]
 
   # GET /arts
   def index
@@ -39,13 +39,14 @@ class ArtsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_art
-      @art = Art.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def art_params
-      params.require(:art).permit(:title, :description, :year)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_art
+    @art = Art.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def art_params
+    params.require(:art).permit(:title, :author, :year, :description)
+  end
 end
