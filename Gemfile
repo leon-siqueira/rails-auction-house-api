@@ -15,6 +15,12 @@ gem 'puma', '~> 5.0'
 # User sign up and authentication
 gem 'devise'
 
+# A ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard
+gem 'jwt'
+
+# Use ActiveModel has_secure_password
+gem 'bcrypt', '~> 3.1.7'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
@@ -41,6 +47,10 @@ gem 'rack-cors'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem 'byebug'
+
+  gem 'dotenv-rails'
+
   gem 'debug', platforms: %i[mri mingw x64_mingw]
 end
 
