@@ -1,5 +1,6 @@
 class Api::V1::ArtsController < ApplicationController
   before_action :set_art, only: %i[show update destroy]
+  before_action :authenticate_user!, only: %i[create update destroy]
 
   # GET /arts
   def index
@@ -18,7 +19,7 @@ class Api::V1::ArtsController < ApplicationController
     @art = Art.new(art_params)
 
     if @art.save
-      render json: @art, status: :created, location: @art
+      render :create, status: :created
     else
       render json: @art.errors, status: :unprocessable_entity
     end
