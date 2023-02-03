@@ -1,9 +1,9 @@
 class Api::V1::SessionsController < ApplicationController
   def create
-    user = User.where(email: params[:email]).first
-    if user&.valid_password?(params[:password])
-      render json: { data: { id: user.id, email: user.email }, token: JwtCodec.encode({ user_id: user.id }) },
-             status: :created
+    @user = User.where(email: params[:email]).first
+    issue_token
+    if @user&.valid_password?(params[:password])
+      render :create, status: :created
     else
       head(:unauthorized)
     end
@@ -17,5 +17,11 @@ class Api::V1::SessionsController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :password)
+  end
+
+  def issue_token
+    iat = Time.zone.now.to_i
+    exp = iat + 3600
+    @token = JwtCodec.encode({ user_id: @user.id, iat:, exp: })
   end
 end
