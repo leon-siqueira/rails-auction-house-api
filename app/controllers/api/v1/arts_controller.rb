@@ -17,6 +17,7 @@ class Api::V1::ArtsController < ApplicationController
   # POST /arts
   def create
     @art = Art.new(art_params)
+    @art.user = current_user
 
     if @art.save
       render :create, status: :created
@@ -36,7 +37,11 @@ class Api::V1::ArtsController < ApplicationController
 
   # DELETE /arts/1
   def destroy
-    @art.destroy
+    if @art.user == current_usert
+      @art.destroy
+    else
+      render json: :unauthorized, status: :unauthorized
+    end
   end
 
   private
