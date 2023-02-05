@@ -7,5 +7,5 @@ json.data do
     )
   end
 
-  json.token token
+  json.token @token
 end
