@@ -18,4 +18,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :arts
+
+  def transaction_history
+    Transaction.where('target_id = ? OR origin_id = ?', id, id)
+  end
 end
