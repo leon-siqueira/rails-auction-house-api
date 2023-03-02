@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_10_033007) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "auction_return_kinds", ["covered_bid", "income"]
   create_enum "auction_status", ["scheduled", "in_progress", "finished"]
-  create_enum "transaction_kinds", ["bid", "deposit", "auction_gains", "refund"]
 
   create_table "arts", force: :cascade do |t|
     t.string "author"
@@ -28,6 +28,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_10_033007) do
     t.string "title"
     t.bigint "user_id"
     t.index ["user_id"], name: "index_arts_on_user_id"
+  end
+
+  create_table "auction_returns", force: :cascade do |t|
+    t.bigint "auction_id", null: false
+    t.bigint "user_id", null: false
+    t.enum "kind", enum_type: "auction_return_kinds"
+    t.integer "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["auction_id"], name: "index_auction_returns_on_auction_id"
+    t.index ["user_id"], name: "index_auction_returns_on_user_id"
   end
 
   create_table "auctions", force: :cascade do |t|
@@ -43,21 +54,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_10_033007) do
   end
 
   create_table "bids", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "transactions", force: :cascade do |t|
-    t.enum "kind", enum_type: "transaction_kinds"
+    t.bigint "auction_id", null: false
+    t.bigint "user_id", null: false
     t.integer "value"
-    t.string "origin_type", null: false
-    t.bigint "origin_id", null: false
-    t.string "target_type", null: false
-    t.bigint "target_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["origin_type", "origin_id"], name: "index_transactions_on_origin"
-    t.index ["target_type", "target_id"], name: "index_transactions_on_target"
+    t.index ["auction_id"], name: "index_bids_on_auction_id"
+    t.index ["user_id"], name: "index_bids_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -68,10 +71,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_10_033007) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "balance"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "arts", "users"
+  add_foreign_key "auction_returns", "auctions"
+  add_foreign_key "auction_returns", "users"
   add_foreign_key "auctions", "arts"
+  add_foreign_key "bids", "auctions"
+  add_foreign_key "bids", "users"
 end

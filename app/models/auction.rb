@@ -14,6 +14,7 @@
 #
 class Auction < ApplicationRecord
   belongs_to :art
+  has_many :bids
 
-  enum :status, { scheduled: 'scheduled', in_progress: 'in_progress', finished: 'finished'}
+  enum :status, { scheduled: 'scheduled', in_progress: 'in_progress', finished: 'finished' }
 end
