@@ -15,6 +15,7 @@
 class Auction < ApplicationRecord
   belongs_to :art
   has_many :bids
+  has_many :auction_returns
 
   enum :status, { scheduled: 'scheduled', in_progress: 'in_progress', finished: 'finished' }
 end

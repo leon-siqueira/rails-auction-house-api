@@ -10,6 +10,7 @@
 #  remember_created_at    :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  balance                :integer
 #
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -19,8 +20,12 @@ class User < ApplicationRecord
 
   has_many :arts
   has_many :bids
+  has_many :auction_returns
 
   def transaction_history
-    Transaction.where('target_id = ? OR origin_id = ?', id, id)
+    transactions = []
+    transactions << Bids.where(user: self)
+    transactions << AuctionReturns.where(user: self)
+    transactions.flatten.sort_by(&:created_at)
   end
 end

@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "auction_return_kinds", ["covered_bid", "income"]
+  create_enum "auction_return_kinds", ["covered_bid", "income", "refund"]
   create_enum "auction_status", ["scheduled", "in_progress", "finished"]
 
   create_table "arts", force: :cascade do |t|
