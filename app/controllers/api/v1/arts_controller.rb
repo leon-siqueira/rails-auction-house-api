@@ -37,7 +37,7 @@ class Api::V1::ArtsController < ApplicationController
 
   # DELETE /arts/1
   def destroy
-    if @art.user == current_usert
+    if @art.user == current_user
       @art.destroy
     else
       render json: :unauthorized, status: :unauthorized
