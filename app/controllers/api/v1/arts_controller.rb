@@ -29,7 +29,7 @@ class Api::V1::ArtsController < ApplicationController
   def update
     authorize_only_owner_and_creator do
       if @art.update(art_params)
-        render :show, status: 
+        render :show
       else
         render json: @art.errors, status: :unprocessable_entity
       end
