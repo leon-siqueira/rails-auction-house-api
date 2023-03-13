@@ -27,28 +27,36 @@ class Api::V1::ArtsController < ApplicationController
 
   # PATCH/PUT api/v1/arts/1
   def update
-    if @art.update(art_params)
-      render json: @art
-    else
-      render json: @art.errors, status: :unprocessable_entity
+    authorize_only_owner_and_creator do
+      if @art.update(art_params)
+        render :show, status: 
+      else
+        render json: @art.errors, status: :unprocessable_entity
+      end
     end
   end
 
   # DELETE api/v1/arts/1
   def destroy
-    if @art.creator == current_user && @art.owner == current_user
+    authorize_only_owner_and_creator do
       if @art.destroy
         render json: { success: true, message: 'Art deleted' }
       else
         render json: { success: false, message: @art.errors }
       end
-    elsif @art.creator != current_user || @art.owner != current_user
-      render json: { success: false, message: "Only the art's creator that is also its owner can delete it" },
-             status: :unauthorized
     end
   end
 
   private
+
+  def authorize_only_owner_and_creator
+    if @art.creator == current_user && @art.owner == current_user
+      yield
+    elsif @art.creator != current_user || @art.owner != current_user
+      render json: { success: false, message: "Only the art's creator that is also its owner can alter it" },
+             status: :unauthorized
+    end
+  end
 
   def set_art
     @art = Art.find(params[:id])
