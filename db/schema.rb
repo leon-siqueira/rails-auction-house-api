@@ -22,12 +22,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
   create_table "arts", force: :cascade do |t|
     t.string "author"
     t.string "year"
+    t.string "title"
     t.string "description"
+    t.bigint "creator_id", null: false
+    t.bigint "owner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "title"
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_arts_on_user_id"
+    t.index ["creator_id"], name: "index_arts_on_creator_id"
+    t.index ["owner_id"], name: "index_arts_on_owner_id"
   end
 
   create_table "auction_returns", force: :cascade do |t|
@@ -42,7 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
   end
 
   create_table "auctions", force: :cascade do |t|
-    t.bigint "art_id", null: false
+    t.bigint "art_id"
     t.string "description", default: "", null: false
     t.integer "minimal_bid"
     t.datetime "start_date"
@@ -76,7 +78,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "arts", "users"
+  add_foreign_key "arts", "users", column: "creator_id"
+  add_foreign_key "arts", "users", column: "owner_id"
   add_foreign_key "auction_returns", "auctions"
   add_foreign_key "auction_returns", "users"
   add_foreign_key "auctions", "arts"

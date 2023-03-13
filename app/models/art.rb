@@ -12,6 +12,7 @@
 #  user_id     :bigint
 #
 class Art < ApplicationRecord
-  belongs_to :user
-  has_many :auctions
+  belongs_to :owner, class_name: 'User'
+  belongs_to :creator, class_name: 'User'
+  has_many :auctions, dependent: :nullify
 end

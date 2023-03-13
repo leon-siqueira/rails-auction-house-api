@@ -18,7 +18,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :arts
+  has_many :created_arts, class_name: 'Art', foreign_key: 'creator_id'
+  has_many :owned_arts, class_name: 'Art', foreign_key: 'owner_id'
   has_many :bids
   has_many :auction_returns
 

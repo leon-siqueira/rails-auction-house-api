@@ -2,31 +2,30 @@ class Api::V1::ArtsController < ApplicationController
   before_action :set_art, only: %i[show update destroy]
   before_action :authenticate_user!, only: %i[create update destroy]
 
-  # GET /arts
+  # GET api/v1/arts
   def index
     @arts = Art.all
 
-    render json: @arts
+    render :index
   end
 
-  # GET /arts/1
+  # GET api/v1/arts/1
   def show
-    render json: @art
+    render :show
   end
 
-  # POST /arts
+  # POST api/v1/arts
   def create
     @art = Art.new(art_params)
-    @art.user = current_user
-
+    @art.assign_attributes(owner: current_user, creator: current_user)
     if @art.save
-      render :create, status: :created
+      render :show, status: :created
     else
       render json: @art.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /arts/1
+  # PATCH/PUT api/v1/arts/1
   def update
     if @art.update(art_params)
       render json: @art
@@ -35,23 +34,26 @@ class Api::V1::ArtsController < ApplicationController
     end
   end
 
-  # DELETE /arts/1
+  # DELETE api/v1/arts/1
   def destroy
-    if @art.user == current_user
-      @art.destroy
-    else
-      render json: :unauthorized, status: :unauthorized
+    if @art.creator == current_user && @art.owner == current_user
+      if @art.destroy
+        render json: { success: true, message: 'Art deleted' }
+      else
+        render json: { success: false, message: @art.errors }
+      end
+    elsif @art.creator != current_user || @art.owner != current_user
+      render json: { success: false, message: "Only the art's creator that is also its owner can delete it" },
+             status: :unauthorized
     end
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_art
     @art = Art.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def art_params
     params.require(:art).permit(:title, :author, :year, :description)
   end
