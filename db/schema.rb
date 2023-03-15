@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_15_021503) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "auction_return_kinds", ["covered_bid", "income", "refund"]
+  create_enum "auction_return_kinds", ["covered_bid", "income"]
   create_enum "auction_status", ["scheduled", "in_progress", "finished"]
 
   create_table "arts", force: :cascade do |t|
@@ -52,7 +52,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
     t.enum "status", enum_type: "auction_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["art_id"], name: "index_auctions_on_art_id"
+    t.index ["user_id"], name: "index_auctions_on_user_id"
   end
 
   create_table "bids", force: :cascade do |t|
@@ -83,6 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_023302) do
   add_foreign_key "auction_returns", "auctions"
   add_foreign_key "auction_returns", "users"
   add_foreign_key "auctions", "arts"
+  add_foreign_key "auctions", "users"
   add_foreign_key "bids", "auctions"
   add_foreign_key "bids", "users"
 end
