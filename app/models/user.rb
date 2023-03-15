@@ -22,11 +22,17 @@ class User < ApplicationRecord
   has_many :owned_arts, class_name: 'Art', foreign_key: 'owner_id'
   has_many :bids
   has_many :auction_returns
+  has_many :auctions
 
   def transaction_history
     transactions = []
-    transactions << Bids.where(user: self)
-    transactions << AuctionReturns.where(user: self)
+    transactions << Bid.where(user: self)
+    transactions << AuctionReturn.where(user: self)
     transactions.flatten.sort_by(&:created_at)
+  end
+
+  def update_balance
+    self.balance = auction_returns.sum(&:value) - bids.sum(&:value)
+    save
   end
 end
