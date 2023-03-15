@@ -14,5 +14,5 @@ class AuctionReturn < ApplicationRecord
   belongs_to :auction
   belongs_to :user
 
-  enum :kind, { covered_bid: 'covered_bid', income: 'income', refund: 'refund' }
+  enum :kind, { covered_bid: 'covered_bid', income: 'income' }
 end
