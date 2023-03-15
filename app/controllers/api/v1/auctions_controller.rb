@@ -16,7 +16,6 @@ class Api::V1::AuctionsController < ApplicationController
   # POST v/auctions.json
   def create
     @auction = Auction.new(auction_params)
-    @auction.user = current_user
 
     if assign_auction_start_date
       render :show, status: :created
