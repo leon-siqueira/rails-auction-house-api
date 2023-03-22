@@ -6,7 +6,7 @@
 
 # IMPORTANT: ignore .env
 .env
-
+.rspec
 .byebug_history
 
 # Ignore bundler config.
