@@ -5,7 +5,7 @@ RSpec.describe Bid, type: :model do
   let(:auction) { create(:auction) }
   let(:user) { create(:user) }
 
-  describe 'bad ending:' do
+  context 'bad ending:' do
     describe "when the user's balance isn't enough for the bid" do
       let(:user) { create(:user, balance: 0) }
       let(:value) { 9999 }
