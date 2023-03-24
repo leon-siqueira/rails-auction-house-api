@@ -1,3 +1,15 @@
 AllCops:
   Exclude:
     - "config/initializers/jwt_authenticatable.rb"
+    - "db/schema.rb"
+  Enabled: true
+
+Layout/LineLength:
+  Exclude:
+    - "spec/**/*"
+  Enabled: true
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+  Enabled: true
