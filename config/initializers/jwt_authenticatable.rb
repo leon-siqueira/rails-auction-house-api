@@ -10,6 +10,8 @@ module Devise
         resource = mapping.to.find(payload['user_id'])
         return fail!(:not_found_in_database) unless resource
 
+        return fail!(:invalid) if payload['iat'] <= resource.token_expiration.to_i
+
         success!(resource)
       end
     end

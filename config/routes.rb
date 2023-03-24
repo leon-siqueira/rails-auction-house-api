@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       resources :auctions, only: %i[create show destroy index] do
         resources :bids, only: %i[index]
       end
-      resource :sessions, only: %i[create show]
+      resource :sessions, only: %i[create show destroy]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -13,6 +13,11 @@ class Api::V1::SessionsController < ApplicationController
     current_user ? head(:ok) : head(:unauthorized)
   end
 
+  def destroy
+    current_user&.update(token_expiration: Time.zone.now)
+    head(:ok)
+  end
+
   private
 
   def user_params
