@@ -21,19 +21,19 @@ class Bid < ApplicationRecord
   def auction_in_progress
     return unless Time.zone.now > auction.end_date
 
-    errors.add(:created_at, 'Bids can only be placed on currently in progress auctions')
+    errors.add(:auction, "is already over. You can't place bids in it anymore")
   end
 
   def minimal_bid_reached
     return unless auction.bids.empty? && (value < auction.minimal_bid)
 
-    errors.add(:value, "needs to be greater than #{auction.minimal_bid - 1}")
+    errors.add(:value, "is less than the minimal bid setted for this auction: #{auction.minimal_bid}")
   end
 
   def winning_bid_covered
     return unless auction.bids.any? && (value < auction.winning_bid.value + 10)
 
-    errors.add(:value, "needs to be greater than #{auction.winning_bid.value + 10}")
+    errors.add(:value, "needs to be greater than #{auction.winning_bid.value + 10} to cover the currently winning bid")
   end
 
   def enough_balance
