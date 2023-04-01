@@ -1,6 +1,6 @@
 class Api::V1::AuctionsController < ApplicationController
-  before_action :set_auction, only: %i[show update destroy]
-  before_action :authenticate_user!, only: %i[create update destroy]
+  before_action :set_auction, only: %i[show destroy]
+  before_action :authenticate_user!, only: %i[create destroy]
 
   # GET api/v1/auctions
   def index
@@ -14,13 +14,14 @@ class Api::V1::AuctionsController < ApplicationController
   def create
     @auction = Auction.new(auction_params)
     @auction.user = current_user
-
-    if assign_auction_start_date
-      render :show, status: :created
-      StartAuctionJob.set(wait_until: @auction.start_date).perform_later(@auction) if @auction.scheduled?
-      EndAuctionJob.set(wait_until: @auction.end_date).perform_later(@auction)
-    else
-      render json: { success: false, messages: @auction.errors.full_messages }, status: :unprocessable_entity
+    authorize_current_user(@auction&.art&.owner) do
+      if assign_auction_start_date
+        render :show, status: :created
+        StartAuctionJob.set(wait_until: @auction.start_date).perform_later(@auction) if @auction.scheduled?
+        EndAuctionJob.set(wait_until: @auction.end_date).perform_later(@auction)
+      else
+        render json: { success: false, messages: @auction.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
