@@ -17,6 +17,9 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  port: 5433
+  username: <%= ENV["PSQL_USER"] %>
+  password: <%= ENV["PSQL_PASS"] %>
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -25,9 +28,6 @@ development:
   <<: *default
   database: rails_auction_house_api_development
   host: localhost
-  port: 5432
-  username: <%= ENV["PSQL_USER"] %>
-  password: <%= ENV["PSQL_PASS"] %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -58,6 +58,7 @@ development:
 test:
   <<: *default
   database: rails_auction_house_api_test
+  host: localhost
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
