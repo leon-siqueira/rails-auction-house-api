@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_24_032602) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_20_222621) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_24_032602) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "auction_return_kinds", ["covered_bid", "income"]
   create_enum "auction_status", ["scheduled", "in_progress", "finished"]
+  create_enum "transaction_kinds", ["deposit", "withdrawal", "auction_income", "bid", "covered_bid"]
 
   create_table "arts", force: :cascade do |t|
     t.string "author"
@@ -65,6 +66,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_24_032602) do
     t.datetime "updated_at", null: false
     t.index ["auction_id"], name: "index_bids_on_auction_id"
     t.index ["user_id"], name: "index_bids_on_user_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.string "giver_type"
+    t.bigint "giver_id"
+    t.string "receiver_type"
+    t.bigint "receiver_id"
+    t.integer "amount"
+    t.enum "kind", enum_type: "transaction_kinds"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["giver_type", "giver_id"], name: "index_transactions_on_giver"
+    t.index ["receiver_type", "receiver_id"], name: "index_transactions_on_receiver"
   end
 
   create_table "users", force: :cascade do |t|
