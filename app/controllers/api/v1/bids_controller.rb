@@ -3,7 +3,7 @@ class Api::V1::BidsController < ApplicationController
   before_action :authenticate_user!, only: %i[create]
 
   def create
-    @bid = Bid.new(bid_params)
+    @bid = Transaction.new(bid_params)
     @bid.user = current_user
 
     if @bid.save
@@ -26,7 +26,7 @@ class Api::V1::BidsController < ApplicationController
   private
 
   def bid_params
-    params.require(:bid).permit(:auction_id, :user_id, :value)
+    params.require(:transaction).permit(:auction_id, :user_id, :value)
   end
 
   def set_auction
