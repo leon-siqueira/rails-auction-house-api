@@ -11,6 +11,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  balance                :integer
+#  token_expiration       :datetime
 #
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -20,19 +21,14 @@ class User < ApplicationRecord
 
   has_many :created_arts, class_name: 'Art', foreign_key: 'creator_id'
   has_many :owned_arts, class_name: 'Art', foreign_key: 'owner_id'
-  has_many :bids
-  has_many :auction_returns
   has_many :auctions
+  has_many :transactions, as: :giver, inverse_of: :giver, class_name: 'Transaction'
+  has_many :transactions, as: :receiver, inverse_of: :receiver, class_name: 'Transaction'
 
-  def transaction_history
-    transactions = []
-    transactions << Bid.where(user: self)
-    transactions << AuctionReturn.where(user: self)
-    transactions.flatten.sort_by(&:created_at)
-  end
+  after_update :update_balance, if: :saved_change_to_transactions?
 
   def update_balance
-    self.balance = auction_returns.sum(&:value) - bids.sum(&:value)
+    self.balance = transaction.where(receiver: self).sum(:amount) - transaction.where(giver: self).sum(:amount)
     save
   end
 end
