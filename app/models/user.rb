@@ -25,10 +25,10 @@ class User < ApplicationRecord
   has_many :transactions, as: :giver, inverse_of: :giver, class_name: 'Transaction'
   has_many :transactions, as: :receiver, inverse_of: :receiver, class_name: 'Transaction'
 
-  after_update :update_balance, if: :saved_change_to_transactions?
+  # TODO: find a way to each time a transaction is created, update the balance of the user
 
   def update_balance
-    self.balance = transaction.where(receiver: self).sum(:amount) - transaction.where(giver: self).sum(:amount)
+    self.balance = transactions.where(receiver: self).sum(:amount) - transactions.where(giver: self).sum(:amount)
     save
   end
 end
