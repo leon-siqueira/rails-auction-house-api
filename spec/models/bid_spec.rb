@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: bids
+#
+#  id         :bigint           not null, primary key
+#  auction_id :bigint           not null
+#  user_id    :bigint           not null
+#  value      :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe Bid, type: :model do
