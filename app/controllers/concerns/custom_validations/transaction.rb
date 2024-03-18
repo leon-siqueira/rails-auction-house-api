@@ -44,10 +44,10 @@ module CustomValidations
       end
 
       def winning_bid_covered
-        return unless receiver.bids.any? && (receiver < receiver.winning_bid.value + 10)
+        return unless receiver.bids.any? && (amount < receiver.winning_bid.amount + 10)
 
         errors.add(:amount,
-                   "needs to be greater than #{receiver.winning_bid.value + 10} to cover the currently winning bid")
+                   "needs to be greater than #{receiver.winning_bid.amount + 10} to cover the currently winning bid")
       end
 
       def enough_balance

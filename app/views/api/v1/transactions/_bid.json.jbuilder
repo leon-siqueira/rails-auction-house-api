@@ -6,4 +6,4 @@ json.amount bid.amount
 json.created_at bid.created_at
 json.updated_at bid.updated_at
 
-json.url api_v1_transaction_url(transaction)
+json.url api_v1_bid_url(bid)

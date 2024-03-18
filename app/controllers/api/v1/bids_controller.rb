@@ -3,8 +3,7 @@ class Api::V1::BidsController < ApplicationController
   before_action :authenticate_user!, only: %i[create]
 
   def create
-    @bid = Transaction.new(bid_params)
-    @bid.user = current_user
+    @bid = Transaction.new(kind: :bid, amount: bid_params[:amount], receiver: @auction, giver: current_user)
 
     if @bid.save
       current_user.update_balance
@@ -16,7 +15,7 @@ class Api::V1::BidsController < ApplicationController
   end
 
   def show
-    @bid = Bid.find(params[:id])
+    @bid = Transaction.find_by(id: params[:id], kind: :bid)
   end
 
   def index
@@ -26,7 +25,7 @@ class Api::V1::BidsController < ApplicationController
   private
 
   def bid_params
-    params.require(:transaction).permit(:auction_id, :user_id, :value)
+    params.require(:bid).permit(:auction_id, :user_id, :amount)
   end
 
   def set_auction
@@ -35,9 +34,10 @@ class Api::V1::BidsController < ApplicationController
 
   def cover_bid
     @covered_bid = @auction.bids[-2]
-    @auction_return = AuctionReturn.new(kind: :covered_bid, auction: @covered_bid.auction,
-                                        user: @covered_bid.user, value: @covered_bid.value)
+    @auction_return = Transaction.new(kind: :covered_bid, giver: @covered_bid.receiver,
+                                      receiver: @covered_bid.giver, amount: @covered_bid.amount)
     @auction_return.save
-    @covered_bid.user.update_balance
+    # TODO: on every transaction creation, enqueue a job to update the balance of the receiver
+    @auction_return.receiver.update_balance
   end
 end

@@ -28,7 +28,7 @@ class Auction < ApplicationRecord
   enum :status, { scheduled: 'scheduled', in_progress: 'in_progress', finished: 'finished' }
 
   def bids
-    Transaction.where(receiver: self)
+    Transaction.where(receiver: self, kind: 'bid')
   end
 
   def winning_bid
