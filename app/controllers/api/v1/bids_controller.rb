@@ -6,7 +6,6 @@ class Api::V1::BidsController < ApplicationController
     @bid = Transaction.new(kind: :bid, amount: bid_params[:amount], receiver: @auction, giver: current_user)
 
     if @bid.save
-      current_user.update_balance
       cover_bid if @auction.bids.count > 1
       render :show, status: :created
     else
@@ -37,7 +36,5 @@ class Api::V1::BidsController < ApplicationController
     @auction_return = Transaction.new(kind: :covered_bid, giver: @covered_bid.receiver,
                                       receiver: @covered_bid.giver, amount: @covered_bid.amount)
     @auction_return.save
-    # TODO: on every transaction creation, enqueue a job to update the balance of the receiver
-    @auction_return.receiver.update_balance
   end
 end

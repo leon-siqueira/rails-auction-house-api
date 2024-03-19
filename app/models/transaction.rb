@@ -32,5 +32,7 @@ class Transaction < ApplicationRecord
   validate :winning_bid_covered, if: -> { kind == 'bid' }
   validate :enough_balance, if: -> { giver_type == 'User' }
 
+  after_create -> { UpdateBalanceJob.perform_later(self) }
+
   enum :kind, KINDS
 end
