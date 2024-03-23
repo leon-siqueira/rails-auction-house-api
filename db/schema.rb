@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_23_192021) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_23_200813) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_23_192021) do
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "auction_return_kinds", ["covered_bid", "income"]
   create_enum "auction_status", ["scheduled", "in_progress", "finished"]
+  create_enum "role_kinds", ["admin", "artist", "buyer", "auctioneer"]
   create_enum "transaction_kinds", ["deposit", "withdrawal", "auction_income", "bid", "covered_bid"]
 
   create_table "arts", force: :cascade do |t|
@@ -46,6 +47,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_23_192021) do
     t.bigint "user_id"
     t.index ["art_id"], name: "index_auctions_on_art_id"
     t.index ["user_id"], name: "index_auctions_on_user_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.enum "kind", enum_type: "role_kinds"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_roles_on_user_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -79,4 +88,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_23_192021) do
   add_foreign_key "arts", "users", column: "owner_id"
   add_foreign_key "auctions", "arts"
   add_foreign_key "auctions", "users"
+  add_foreign_key "roles", "users"
 end
