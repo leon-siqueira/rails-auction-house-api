@@ -18,6 +18,7 @@ arts.each do |art|
              owner: player1,
              author: art[:artist],
              title: art[:title],
+             img_url: art[:img_url],
              year: art[:date],
              description: art[:tag])
 end
