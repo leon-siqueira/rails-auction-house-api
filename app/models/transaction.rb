@@ -5,8 +5,8 @@
 #  id            :bigint           not null, primary key
 #  giver_type    :string
 #  giver_id      :bigint
-#  receiver_type :string           not null
-#  receiver_id   :bigint           not null
+#  receiver_type :string
+#  receiver_id   :bigint
 #  amount        :integer
 #  kind          :enum
 #  created_at    :datetime         not null

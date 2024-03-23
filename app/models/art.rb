@@ -11,6 +11,7 @@
 #  owner_id    :bigint           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  img_url     :string
 #
 class Art < ApplicationRecord
   belongs_to :owner, class_name: 'User'

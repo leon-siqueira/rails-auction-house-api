@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: transactions
+#
+#  id            :bigint           not null, primary key
+#  giver_type    :string
+#  giver_id      :bigint
+#  receiver_type :string
+#  receiver_id   :bigint
+#  amount        :integer
+#  kind          :enum
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe Transaction, type: :model do
