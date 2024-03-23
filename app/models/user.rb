@@ -30,4 +30,8 @@ class User < ApplicationRecord
     self.balance = transactions.where(receiver: self).sum(:amount) - transactions.where(giver: self).sum(:amount)
     save
   end
+
+  def is?(role)
+    roles.any? { |r| r.kind == role.to_s }
+  end
 end
