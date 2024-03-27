@@ -19,6 +19,7 @@ class Api::V1::ArtsController < ApplicationController
   def create
     @art = Art.new(art_params)
     @art.assign_attributes(owner: current_user, creator: current_user)
+    authorize @art
     if @art.save
       render :show, status: :created
     else
@@ -37,6 +38,7 @@ class Api::V1::ArtsController < ApplicationController
 
   # DELETE api/v1/arts/1
   def destroy
+    authorize @art
     if @art.destroy
       render json: { success: true, message: 'Art deleted' }
     else
@@ -51,6 +53,6 @@ class Api::V1::ArtsController < ApplicationController
   end
 
   def art_params
-    params.require(:art).permit(:title, :author, :year, :description)
+    params.require(:art).permit(:title, :author, :year, :description, :img_url)
   end
 end
