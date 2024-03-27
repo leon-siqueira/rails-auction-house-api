@@ -5,7 +5,6 @@ Rails.application.routes.draw do
       resources :arts
       resources :bids, only: %i[create show]
       resources :auctions, only: %i[create show destroy index] do
-        post 'bid', to: 'auctions#bid'
         resources :bids, only: %i[index]
       end
       resource :sessions, only: %i[create show destroy]
