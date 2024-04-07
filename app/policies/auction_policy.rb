@@ -4,7 +4,7 @@ class AuctionPolicy
   def initialize(user, auction)
     @user = user
     @auction = auction
-    @art = auction.art
+    @art = auction.art if auction.instance_of?(Auction)
   end
 
   def index?
@@ -16,7 +16,7 @@ class AuctionPolicy
   end
 
   def create?
-    @user.is?(:admin) || @user.is?(:auctioneer)
+    @user.is?(:admin) || @user.is?(:auctioneer) && @user == @art.owner
   end
 
   def destroy?
