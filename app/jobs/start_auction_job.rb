@@ -3,5 +3,6 @@ class StartAuctionJob < ApplicationJob
 
   def perform(auction)
     auction.update(status: :in_progress)
+    EndAuctionJob.set(wait_until: auction.end_date).perform_later(auction)
   end
 end
