@@ -20,6 +20,6 @@ class AuctionPolicy
   end
 
   def destroy?
-    create?
+    @user.is?(:admin) || @user.is?(:auctioneer) && @user == @auction.user && @auction.bids.empty?
   end
 end

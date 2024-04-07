@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::AuctionsController, type: :request do
   let(:user) { create(:user) }
+  let(:user2) { create(:user) }
+  let(:bid) { create(:transaction, :bid, receiver: auction, giver: user2, amount: auction.minimal_bid) }
   let!(:art) { create(:art, owner: user, creator: user) }
 
   describe 'Authorization' do
@@ -43,6 +45,58 @@ RSpec.describe Api::V1::AuctionsController, type: :request do
         delete("/api/v1/auctions/#{auction.id}", headers:)
         expect(response.status).to eq(403)
         expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+      end
+
+      context 'when the user has an auctioneer role' do
+        let!(:auctioneer_role) { create(:role, :auctioneer, user:) }
+
+        it 'POST /api/v1/auctions with an art THAT YOU OWN, it allows to create an auction' do
+          post('/api/v1/auctions', params:, headers:)
+          expect(response.status).to eq(201)
+          expect(JSON.parse(response.body)['success']).to be true
+        end
+
+        it 'POST /api/v1/auctions with an art THAT YOU DO NOT OWN, it does NOT allows to create an auction' do
+          art.update(owner: user2)
+          art.reload
+          post('/api/v1/auctions', params:, headers:)
+          expect(response.status).to eq(403)
+          expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        end
+
+        it 'DELETE /api/v1/auctions with an auction THAT YOU OWN with no bids, it allows to delete an auction' do
+          delete("/api/v1/auctions/#{auction.id}", params:, headers:)
+          expect(response.status).to eq(403)
+          expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        end
+
+        it 'DELETE /api/v1/auctions with an auction THAT YOU OWN with ANY bids, it does NOT allows to delete an auction' do
+          bid
+          auction.reload
+          delete("/api/v1/auctions/#{auction.id}", params:, headers:)
+          expect(response.status).to eq(403)
+          expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        end
+
+        it 'DELETE /api/v1/auctions with an auction THAT YOU DO NOT OWN, it does NOT allows to create an auction' do
+          art.update(owner: user2)
+          art.reload
+          delete("/api/v1/auctions/#{auction.id}", params:, headers:)
+          expect(response.status).to eq(403)
+          expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        end
+      end
+
+      context 'when the user has an admin role' do
+        let!(:admin_role) { create(:role, :admin, user:) }
+
+        it 'DELETE /api/v1/auctions/:id allows to delete ANY auction' do
+          bid
+          art.update(owner: user2)
+          delete("/api/v1/auctions/#{auction.id}", headers:)
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)['success']).to be true
+        end
       end
     end
   end

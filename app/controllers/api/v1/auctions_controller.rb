@@ -31,7 +31,11 @@ class Api::V1::AuctionsController < ApplicationController
 
   # DELETE api/v1/auctions/1
   def destroy
-    @auction.destroy
+    if @auction.destroy
+      render json: { success: true, message: 'Auction deleted' }
+    else
+      render json: { success: false, message: @auction.errors }
+    end
   end
 
   private
