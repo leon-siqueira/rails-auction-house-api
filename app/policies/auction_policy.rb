@@ -1,5 +1,5 @@
 class AuctionPolicy
-  attr_reader :user, :art
+  attr_reader :user, :auction
 
   def initialize(user, auction)
     @user = user
