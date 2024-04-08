@@ -20,8 +20,7 @@ class Api::V1::AuctionsController < ApplicationController
     authorize @auction
     if assign_auction_start_date
       render :show, status: :created
-      # TODO: Check if the auction is ended on scheduled auction cases
-      # TODO: handle the creation of the jobs in a separeted module
+
       StartAuctionJob.set(wait_until: @auction.start_date).perform_later(@auction) if @auction.scheduled?
       EndAuctionJob.set(wait_until: @auction.end_date).perform_later(@auction)
     else
