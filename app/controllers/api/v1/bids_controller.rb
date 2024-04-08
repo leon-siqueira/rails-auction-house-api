@@ -1,15 +1,19 @@
 class Api::V1::BidsController < ApplicationController
   before_action :set_auction, only: %i[create index]
   before_action :authenticate_user!, only: %i[create]
+  before_action -> { authorize Transaction, policy_class: BidPolicy }, only: %i[show index]
 
-  # POST api/v1/bids/1
+  # POST api/v1/bids/
   def create
-    @bid ||= Transactions::Create.new('bid', bid_params).call
-    if @bid[:success]
+    @bid_creation ||= Transactions::Create.new('bid', bid_params).call
+    @bid = @bid_creation[:transaction]
+
+    authorize @bid, policy_class: BidPolicy
+    if @bid_creation[:success]
       cover_bid if @auction.bids.count > 1
-      render :bid, status: :created
+      render :show, status: :created
     else
-      render json: @bid[:error], status: :unprocessable_entity
+      render json: @bid_creation[:errors], status: :unprocessable_entity
     end
   end
 
@@ -26,23 +30,25 @@ class Api::V1::BidsController < ApplicationController
   private
 
   def bid_params
-    params.require(:bid).permit(:auction_id, :user_id, :amount)
-    sanitized_params = params.require(:bid).permit(:auction_id, :user_id, :amount)
-    sanitized_params.transform_keys do |key|
-      key = :receiver_id if key == :auction_id
-      key = :giver_id if key == :user_id
+    sanitized_params = params.require(:bid)
+                             .permit(:auction_id, :amount)
+                             .merge(giver_id: current_user.id)
+    sanitized_params.transform_keys! do |key|
+      key = :receiver_id if key.to_sym == :auction_id
 
       key
     end
+
+    sanitized_params
   end
 
   def set_auction
-    @auction = Auction.find(params[:auction_id])
+    @auction = Auction.find(params.dig(:bid, :auction_id) || params[:auction_id])
   end
 
   def cover_bid
     covered_bid = @auction.bids[-2]
-    transaction_params = { giver_id: @auction.id, receiver_id: covered_bid.user.id, amount: covered_bid.amount }
+    transaction_params = { giver_id: @auction.id, receiver_id: covered_bid.giver.id, amount: covered_bid.amount }
     Transactions::Create.new('covered_bid', transaction_params).call
   end
 end
