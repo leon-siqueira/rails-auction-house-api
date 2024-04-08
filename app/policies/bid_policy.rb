@@ -1,5 +1,5 @@
 class BidPolicy
-  attr_reader :user
+  attr_reader :user, :bid
 
   def initialize(user, bid)
     @user = user
