@@ -1,22 +1,28 @@
 class Api::V1::BidsController < ApplicationController
   before_action :set_auction, only: %i[create index]
   before_action :authenticate_user!, only: %i[create]
+  before_action -> { authorize Transaction, policy_class: BidPolicy }, only: %i[show index]
 
+  # POST api/v1/bids/
   def create
-    @bid = Transaction.new(kind: :bid, amount: bid_params[:amount], receiver: @auction, giver: current_user)
+    @bid_creation ||= Transactions::Create.new('bid', bid_params).call
+    @bid = @bid_creation[:transaction]
 
-    if @bid.save
+    authorize @bid, policy_class: BidPolicy
+    if @bid_creation[:success]
       cover_bid if @auction.bids.count > 1
       render :show, status: :created
     else
-      render json: @bid.errors, status: :unprocessable_entity
+      render json: @bid_creation[:errors], status: :unprocessable_entity
     end
   end
 
+  # GET api/v1/bids/1
   def show
     @bid = Transaction.find_by(id: params[:id], kind: :bid)
   end
 
+  # GET api/v1/auctions/1/bids
   def index
     @bids = @auction.bids
   end
@@ -24,17 +30,25 @@ class Api::V1::BidsController < ApplicationController
   private
 
   def bid_params
-    params.require(:bid).permit(:auction_id, :user_id, :amount)
+    sanitized_params = params.require(:bid)
+                             .permit(:auction_id, :amount)
+                             .merge(giver_id: current_user.id)
+    sanitized_params.transform_keys! do |key|
+      key = :receiver_id if key.to_sym == :auction_id
+
+      key
+    end
+
+    sanitized_params
   end
 
   def set_auction
-    @auction = Auction.find(params[:auction_id])
+    @auction = Auction.find(params.dig(:bid, :auction_id) || params[:auction_id])
   end
 
   def cover_bid
-    @covered_bid = @auction.bids[-2]
-    @auction_return = Transaction.new(kind: :covered_bid, giver: @covered_bid.receiver,
-                                      receiver: @covered_bid.giver, amount: @covered_bid.amount)
-    @auction_return.save
+    covered_bid = @auction.bids[-2]
+    transaction_params = { giver_id: @auction.id, receiver_id: covered_bid.giver.id, amount: covered_bid.amount }
+    Transactions::Create.new('covered_bid', transaction_params).call
   end
 end

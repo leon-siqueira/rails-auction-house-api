@@ -24,11 +24,14 @@ class User < ApplicationRecord
   has_many :auctions
   has_many :transactions, as: :giver, inverse_of: :giver, class_name: 'Transaction'
   has_many :transactions, as: :receiver, inverse_of: :receiver, class_name: 'Transaction'
-
-  # TODO: find a way to each time a transaction is created, update the balance of the user
+  has_many :roles
 
   def update_balance
     self.balance = transactions.where(receiver: self).sum(:amount) - transactions.where(giver: self).sum(:amount)
     save
+  end
+
+  def is?(role)
+    roles.any? { |r| r.kind == role.to_s }
   end
 end
