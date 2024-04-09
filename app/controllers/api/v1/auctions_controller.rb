@@ -25,8 +25,7 @@ module Api
         if assign_auction_start_date
           render :show, status: :created
 
-          StartAuctionJob.set(wait_until: @auction.start_date).perform_later(@auction) if @auction.scheduled?
-          EndAuctionJob.set(wait_until: @auction.end_date).perform_later(@auction)
+          StartAuctionJob.set(wait_until: @auction.start_date).perform_later(@auction)
         else
           render json: { success: false, messages: @auction.errors.full_messages }, status: :unprocessable_entity
         end
