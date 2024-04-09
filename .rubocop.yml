@@ -1,3 +1,8 @@
+require:
+  - rubocop-factory_bot
+  - rubocop-rails
+  - rubocop-rspec_rails
+
 AllCops:
   NewCops: enable
   Exclude:
@@ -21,65 +26,23 @@ Style/Documentation:
     - "**/*"
   Enabled: true
 
-Gemspec/DeprecatedAttributeAssignment:
-  Enabled: true
+Rails/DuplicateAssociation:
+  Enabled: false
 
-Gemspec/DevelopmentDependencies:
-  Enabled: true
+RSpecRails/AvoidSetupHook:
+  Enabled: false
 
-Gemspec/RequireMFA:
-  Enabled: true
+RSpecRails/HttpStatus:
+  Enabled: false
 
-Layout/LineContinuationLeadingSpace:
-  Enabled: true
+RSpecRails/InferredSpecType:
+  Enabled: false
 
-Layout/LineContinuationSpacing:
-  Enabled: true
+RSpecRails/MinitestAssertions:
+  Enabled: false
 
-Layout/LineEndStringConcatenationIndentation:
-  Enabled: true
+RSpecRails/TravelAround:
+  Enabled: false
 
-Layout/SpaceBeforeBrackets:
-  Enabled: true
-
-Lint/AmbiguousAssignment:
-  Enabled: true
-
-Lint/AmbiguousOperatorPrecedence:
-  Enabled: true
-
-Lint/AmbiguousRange:
-  Enabled: true
-
-Lint/ConstantOverwrittenInRescue:
-  Enabled: true
-
-Lint/DeprecatedConstants:
-  Enabled: true
-
-Lint/DuplicateBranch:
-  Enabled: true
-
-Lint/DuplicateMagicComment:
-  Enabled: true
-
-Lint/DuplicateMatchPattern:
-  Enabled: true
-
-Lint/DuplicateRegexpCharacterClassElement:
-  Enabled: true
-
-Lint/EmptyBlock:
-  Enabled: true
-
-Lint/EmptyClass:
-  Enabled: true
-
-Lint/EmptyInPattern:
-  Enabled: true
-
-Lint/IncompatibleIoSelectWithFiberScheduler:
-  Enabled: true
-
-Lint/ItWithoutArgumentsInBlock:
-  Enabled: true
+RSpecRails/NegationBeValid:
+  Enabled: false
