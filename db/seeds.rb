@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
@@ -8,7 +10,7 @@
 
 puts 'Creating users...'
 player1 = User.create(email: 'jon.doe@email.com', password: 'pass1234', balance: 100_000)
-player2 = User.create(email: 'jim.doe@email.com', password: 'pass1234', balance: 100_000)
+User.create(email: 'jim.doe@email.com', password: 'pass1234', balance: 100_000)
 
 arts = ArtveeScraper.scrape
 puts 'Creating arts...'

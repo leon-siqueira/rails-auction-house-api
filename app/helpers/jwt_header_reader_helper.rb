@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module JwtHeaderReaderHelper
   class << self
     def decoded_token(request)

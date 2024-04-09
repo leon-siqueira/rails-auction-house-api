@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BidPolicy
   attr_reader :user, :bid
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateBalanceJob < ApplicationJob
   queue_as :default
 

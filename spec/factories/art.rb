@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :art do
     description { Faker::Lorem.sentence(word_count: rand(3..10)) }

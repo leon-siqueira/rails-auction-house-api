@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.id bid.id
 json.auction_id bid.receiver_id
 json.user_id bid.giver_id

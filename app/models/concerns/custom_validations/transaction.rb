@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CustomValidations
   module Transaction
     extend ActiveSupport::Concern

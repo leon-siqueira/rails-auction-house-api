@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ArtPolicy
   attr_reader :user, :art
 

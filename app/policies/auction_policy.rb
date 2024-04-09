@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AuctionPolicy
   attr_reader :user, :auction
 

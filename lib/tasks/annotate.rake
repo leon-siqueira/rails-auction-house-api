@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task :annotate do
   puts 'Annotating models...'
   system 'bundle exec annotate --models'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module JwtCodec
   class << self
     def encode(data = {})

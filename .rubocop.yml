@@ -2,7 +2,8 @@ AllCops:
   Exclude:
     - "config/initializers/jwt_authenticatable.rb"
     - "db/schema.rb"
-  Enabled: true
+    - "bin/bundle"
+    - "config/**/*"
 
 Layout/LineLength:
   Exclude:
@@ -12,4 +13,9 @@ Layout/LineLength:
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
+  Enabled: true
+
+Style/Documentation:
+  Exclude:
+    - "**/*"
   Enabled: true
