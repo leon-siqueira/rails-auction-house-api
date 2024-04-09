@@ -9,7 +9,7 @@ module JwtHeaderReaderHelper
 
     def header_token(request)
       header = request.headers['Authorization']
-      header&.split(' ')&.last
+      header&.split&.last
     end
   end
 end

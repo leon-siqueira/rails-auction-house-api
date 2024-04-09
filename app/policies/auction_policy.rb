@@ -18,10 +18,10 @@ class AuctionPolicy
   end
 
   def create?
-    @user.is?(:admin) || @user.is?(:auctioneer) && @user == @art.owner
+    @user.is?(:admin) || (@user.is?(:auctioneer) && @user == @art.owner)
   end
 
   def destroy?
-    @user.is?(:admin) || @user.is?(:auctioneer) && @user == @auction.user && @auction.bids.empty?
+    @user.is?(:admin) || (@user.is?(:auctioneer) && @user == @auction.user && @auction.bids.empty?)
   end
 end

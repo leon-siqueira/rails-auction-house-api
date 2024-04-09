@@ -21,7 +21,7 @@ class ArtPolicy
   end
 
   def update?
-    @user.is?(:admin) || @art.creator == @user && @art.owner == @user
+    @user.is?(:admin) || (@art.creator == @user && @art.owner == @user)
   end
 
   def destroy?

@@ -3,7 +3,7 @@
 module CustomValidations
   module Transaction
     extend ActiveSupport::Concern
-
+    # rubocop:disable Metrics/BlockLength
     included do
       private
 
@@ -58,5 +58,6 @@ module CustomValidations
         errors.add(:amount, 'is greater than your current balance')
       end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end

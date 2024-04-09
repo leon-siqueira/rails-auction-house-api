@@ -18,6 +18,6 @@ class BidPolicy
   end
 
   def create?
-    @user.is?(:admin) || @user.is?(:buyer) && @auction.user != @user
+    @user.is?(:admin) || (@user.is?(:buyer) && @auction.user != @user)
   end
 end
