@@ -61,6 +61,14 @@ group :development, :test do
   gem 'faker'
 
   gem 'debug', platforms: %i[mri mingw x64_mingw]
+
+  gem 'rubocop'
+
+  gem 'rubocop-rails'
+
+  gem 'bundler-audit'
+
+  gem 'brakeman'
 end
 
 group :development do
