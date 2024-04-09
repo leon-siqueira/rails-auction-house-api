@@ -56,9 +56,5 @@ jobs:
         run: bundle exec bundler-audit --update
       - name: Security audit application code
         run: bundle exec brakeman -q -w2
-      - name: Install Linter
-        run: gem install rubocop rubocop-rails
       - name: Lint Ruby files
         run: bundle exec rubocop --parallel
-      - name: Lint Ruby DEBUG
-        run: bundle exec rubocop -d

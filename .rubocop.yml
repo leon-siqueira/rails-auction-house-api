@@ -46,3 +46,6 @@ RSpecRails/TravelAround:
 
 RSpecRails/NegationBeValid:
   Enabled: false
+
+RSpec/Rails/HttpStatus:
+  Enabled: false
