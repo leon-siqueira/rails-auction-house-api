@@ -6,7 +6,7 @@ class CreateAuctionReturnKindsEnum < ActiveRecord::Migration[7.0]
   end
 
   def down
-    execute <<-SQL
+    execute <<-SQL.squish
         DROP TYPE auction_return_kinds;
     SQL
   end

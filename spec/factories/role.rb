@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :role do
-    user { create(:user) }
+    user { association(:user) }
     trait :admin do
       kind { 'admin' }
     end

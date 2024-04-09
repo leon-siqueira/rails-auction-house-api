@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task :annotate do
+task annotate: :environment do
   puts 'Annotating models...'
   system 'bundle exec annotate --models'
 end

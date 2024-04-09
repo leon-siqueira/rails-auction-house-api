@@ -6,7 +6,7 @@ class CreateTransactionKinds < ActiveRecord::Migration[7.0]
   end
 
   def down
-    execute <<-SQL
+    execute <<-SQL.squish
         DROP TYPE transaction_kinds;
     SQL
   end

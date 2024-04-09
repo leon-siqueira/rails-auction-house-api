@@ -18,12 +18,12 @@ RSpec.describe Api::V1::SessionsController, type: :request do
         sleep 1
 
         delete('/api/v1/sessions', headers:)
-        expect(response.status).to eq(200)
+        expect(response).to have_http_status(:ok)
         user.reload
         expect(user.token_expiration.to_i > issue_time).to eq true
 
         post('/api/v1/arts', params:, headers:)
-        expect(response.status).to eq(401)
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

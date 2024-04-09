@@ -3,6 +3,10 @@
 module Api
   module V1
     class SessionsController < ApplicationController
+      def show
+        current_user ? head(:ok) : head(:unauthorized)
+      end
+
       def create
         @user = User.where(email: params[:email]).first
         issue_token
@@ -11,10 +15,6 @@ module Api
         else
           head(:unauthorized)
         end
-      end
-
-      def show
-        current_user ? head(:ok) : head(:unauthorized)
       end
 
       def destroy

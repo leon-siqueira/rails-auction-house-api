@@ -25,28 +25,28 @@ RSpec.describe Api::V1::ArtsController, type: :request do
 
       it 'GET /api/v1/arts/:id shows an art' do
         get("/api/v1/arts/#{art.id}", headers:)
-        expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)['data']['art']['id']).to eq(art.id)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['data']['art']['id']).to eq(art.id)
       end
 
       it 'GET /api/v1/arts list all arts' do
         get('/api/v1/arts', headers:)
-        expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)['data']).to be_an_instance_of(Array)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['data']).to be_an_instance_of(Array)
       end
 
       it 'POST /api/v1/arts does NOT allow to create if you do NOT have an artist role' do
         post('/api/v1/arts', params:, headers:)
-        expect(response.status).to eq(403)
-        expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['error']).to eq('You are not authorized to perform this action')
       end
 
       it 'DELETE /api/v1/arts/:id does NOT allow to delete an art if you are NOT its creator AND owner NOR admin' do
         art.update(owner: user2)
         art.reload
         delete("/api/v1/arts/#{art.id}", headers:)
-        expect(response.status).to eq(403)
-        expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['error']).to eq('You are not authorized to perform this action')
       end
 
       context 'when the user has an artist role' do
@@ -57,8 +57,8 @@ RSpec.describe Api::V1::ArtsController, type: :request do
 
         it 'POST /api/v1/arts allows to create an art' do
           post('/api/v1/arts', params:, headers:)
-          expect(response.status).to eq(201)
-          expect(JSON.parse(response.body)['success']).to be true
+          expect(response).to have_http_status(:created)
+          expect(response.parsed_body['success']).to be true
         end
       end
 
@@ -68,8 +68,8 @@ RSpec.describe Api::V1::ArtsController, type: :request do
         it 'DELETE /api/v1/arts/:id allows to delete ANY art' do
           art.update(owner: user2)
           delete("/api/v1/arts/#{art.id}", headers:)
-          expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)['success']).to be true
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body['success']).to be true
         end
       end
     end

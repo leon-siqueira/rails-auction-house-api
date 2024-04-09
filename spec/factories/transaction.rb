@@ -5,32 +5,32 @@ FactoryBot.define do
     amount { 1 }
 
     trait :deposit do
-      receiver { build(:user) }
+      receiver { association(:user) }
       kind { 'deposit' }
     end
 
     trait :withdrawal do
-      giver { build(:user) }
+      giver { association(:user) }
       kind { 'withdrawal' }
     end
 
     trait :bid do
-      giver { build(:user) }
-      receiver { build(:auction) }
+      giver { association(:user) }
+      receiver { association(:auction) }
       kind { 'bid' }
       amount { 200 }
     end
 
     trait :auction_income do
-      giver { build(:auction) }
-      receiver { build(:user) }
+      giver { association(:auction) }
+      receiver { association(:user) }
       kind { 'auction_income' }
       amount { 200 }
     end
 
     trait :covered_bid do
-      giver { build(:auction) }
-      receiver { build(:user) }
+      giver { association(:auction) }
+      receiver { association(:user) }
       kind { 'covered_bid' }
       amount { 200 }
     end

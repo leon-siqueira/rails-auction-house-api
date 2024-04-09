@@ -23,21 +23,21 @@ RSpec.describe Api::V1::BidsController, type: :request do
 
       it 'GET /api/v1/bids/:id shows a bid' do
         get("/api/v1/bids/#{bid.id}", headers:)
-        expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)['data']['bid']['id']).to eq(bid.id)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['data']['bid']['id']).to eq(bid.id)
       end
 
       it 'GET /api/v1/auctions/:id/bids list all bids on that auction' do
         bid
         get("/api/v1/auctions/#{auction.id}/bids", headers:)
-        expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)['data']).to be_an_instance_of(Array)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['data']).to be_an_instance_of(Array)
       end
 
       it 'POST /api/v1/bids does NOT allow to create if you do NOT have an buyer role' do
         post('/api/v1/bids', params:, headers:)
-        expect(response.status).to eq(403)
-        expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['error']).to eq('You are not authorized to perform this action')
       end
 
       context 'when the user has an buyer role' do
@@ -45,16 +45,16 @@ RSpec.describe Api::V1::BidsController, type: :request do
 
         it 'POST /api/v1/bids allows you to create a bid on auctions that were NOT created by you' do
           post('/api/v1/bids', params:, headers:)
-          expect(response.status).to eq(201)
-          expect(JSON.parse(response.body)['success']).to be true
+          expect(response).to have_http_status(:created)
+          expect(response.parsed_body['success']).to be true
         end
 
         it 'POST /api/v1/bids DOES NOT allow you to create a bid on auctions that were created by you' do
           auction.update(user:)
           auction.reload
           post('/api/v1/bids', params:, headers:)
-          expect(response.status).to eq(403)
-          expect(JSON.parse(response.body)['error']).to eq('You are not authorized to perform this action')
+          expect(response).to have_http_status(:forbidden)
+          expect(response.parsed_body['error']).to eq('You are not authorized to perform this action')
         end
       end
 
@@ -63,8 +63,8 @@ RSpec.describe Api::V1::BidsController, type: :request do
 
         it 'POST /api/v1/bids allows you to create a bid on ANY auction' do
           post('/api/v1/bids', params:, headers:)
-          expect(response.status).to eq(201)
-          expect(JSON.parse(response.body)['success']).to be true
+          expect(response).to have_http_status(:created)
+          expect(response.parsed_body['success']).to be true
         end
       end
     end

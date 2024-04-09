@@ -7,6 +7,16 @@ module Api
       before_action :authenticate_user!, only: %i[create]
       before_action -> { authorize Transaction, policy_class: BidPolicy }, only: %i[show index]
 
+      # GET api/v1/auctions/1/bids
+      def index
+        @bids = @auction.bids
+      end
+
+      # GET api/v1/bids/1
+      def show
+        @bid = Transaction.find_by(id: params[:id], kind: :bid)
+      end
+
       # POST api/v1/bids/
       def create
         @bid_creation ||= Transactions::Create.new('bid', bid_params).call
@@ -19,16 +29,6 @@ module Api
         else
           render json: @bid_creation[:errors], status: :unprocessable_entity
         end
-      end
-
-      # GET api/v1/bids/1
-      def show
-        @bid = Transaction.find_by(id: params[:id], kind: :bid)
-      end
-
-      # GET api/v1/auctions/1/bids
-      def index
-        @bids = @auction.bids
       end
 
       private

@@ -75,7 +75,7 @@ RSpec.describe Transaction, type: :model do
 
       describe 'when the auction is already over' do
         let(:auction) do
-          a = build(:auction, start_date: Time.zone.now - 1.hour, end_date: Time.zone.now - 1.second)
+          a = build(:auction, start_date: 1.hour.ago, end_date: 1.second.ago)
           a.save(validate: false)
           a
         end

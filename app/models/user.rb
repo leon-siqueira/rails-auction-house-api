@@ -21,12 +21,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :created_arts, class_name: 'Art', foreign_key: 'creator_id'
-  has_many :owned_arts, class_name: 'Art', foreign_key: 'owner_id'
-  has_many :auctions
-  has_many :transactions, as: :giver, inverse_of: :giver, class_name: 'Transaction'
-  has_many :transactions, as: :receiver, inverse_of: :receiver, class_name: 'Transaction'
-  has_many :roles
+  has_many :created_arts, class_name: 'Art', inverse_of: :creator, foreign_key: 'creator_id', dependent: :nullify
+  has_many :owned_arts, class_name: 'Art', inverse_of: :owner, foreign_key: 'owner_id', dependent: :nullify
+  has_many :auctions, dependent: :nullify
+  has_many :transactions, as: :giver, inverse_of: :giver, class_name: 'Transaction', dependent: :nullify
+  has_many :transactions, as: :receiver, inverse_of: :receiver, class_name: 'Transaction', dependent: :nullify
+  has_many :roles, dependent: :destroy
 
   def update_balance
     self.balance = transactions.where(receiver: self).sum(:amount) - transactions.where(giver: self).sum(:amount)
