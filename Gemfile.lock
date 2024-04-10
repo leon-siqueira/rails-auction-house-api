@@ -90,7 +90,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    devise (4.9.3)
+    devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0)
@@ -225,7 +225,7 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.1)
-    rubocop (1.63.0)
+    rubocop (1.63.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -240,12 +240,6 @@ GEM
       parser (>= 3.3.0.4)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
-    rubocop-discourse (3.7.1)
-      activesupport (>= 6.1)
-      rubocop (>= 1.59.0)
-      rubocop-capybara (>= 2.0.0)
-      rubocop-factory_bot (>= 2.0.0)
-      rubocop-rspec (>= 2.25.0)
     rubocop-factory_bot (2.25.1)
       rubocop (~> 1.41)
     rubocop-rails (2.24.1)
@@ -300,8 +294,8 @@ DEPENDENCIES
   rails (~> 7.0.4)
   rspec-rails
   rubocop
-  rubocop-discourse
   rubocop-rails
+  rubocop-rspec
   tzinfo-data
 
 RUBY VERSION

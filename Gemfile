@@ -64,15 +64,15 @@ group :development, :test do
 
   gem 'debug', platforms: %i[mri mingw x64_mingw]
 
-  gem 'rubocop'
+  gem 'rubocop', require: false
 
-  gem 'rubocop-rails'
+  gem 'rubocop-rails', require: false
 
-  gem 'rubocop-discourse'
+  gem 'rubocop-rspec', require: false
 
-  gem 'bundler-audit'
+  gem 'bundler-audit', require: false
 
-  gem 'brakeman'
+  gem 'brakeman', require: false
 end
 
 group :development do
