@@ -19,7 +19,7 @@ module Api
 
       # POST api/v1/bids/
       def create
-        @bid_creation ||= Transactions::Create.new('bid', bid_params).call
+        @bid_creation ||= Transactions::Create.call('bid', bid_params)
         @bid = @bid_creation[:transaction]
 
         authorize @bid, policy_class: BidPolicy
@@ -53,7 +53,7 @@ module Api
       def cover_bid
         covered_bid = @auction.bids[-2]
         transaction_params = { giver_id: @auction.id, receiver_id: covered_bid.giver.id, amount: covered_bid.amount }
-        Transactions::Create.new('covered_bid', transaction_params).call
+        Transactions::Create.call('covered_bid', transaction_params)
       end
     end
   end
