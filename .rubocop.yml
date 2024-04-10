@@ -9,7 +9,6 @@ require:
 AllCops:
   NewCops: enable
   Exclude:
-    - "config/initializers/jwt_authenticatable.rb"
     - "db/schema.rb"
     - "bin/bundle"
     - "config/**/*"
