@@ -50,7 +50,7 @@ RSpec.describe Api::V1::AuctionsController, type: :request do
       end
 
       context 'when the user has an auctioneer role' do
-        let!(:auctioneer_role) { create(:role, :auctioneer, user:) }
+        before { create(:role, :auctioneer, user:) }
 
         it 'POST /api/v1/auctions with an art THAT YOU OWN, it allows to create an auction' do
           post('/api/v1/auctions', params:, headers:)
@@ -90,7 +90,7 @@ RSpec.describe Api::V1::AuctionsController, type: :request do
       end
 
       context 'when the user has an admin role' do
-        let!(:admin_role) { create(:role, :admin, user:) }
+        before { create(:role, :admin, user:) }
 
         it 'DELETE /api/v1/auctions/:id allows to delete ANY auction' do
           bid

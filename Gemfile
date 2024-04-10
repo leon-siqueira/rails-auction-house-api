@@ -80,5 +80,5 @@ group :development do
   # gem "spring"
 
   # Add a comment summarizing the current schema
-  gem 'annotate'
+  gem 'annotate', require: false
 end

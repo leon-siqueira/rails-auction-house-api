@@ -50,8 +50,11 @@ RSpec.describe Api::V1::ArtsController, type: :request do
       end
 
       context 'when the user has an artist role' do
-        let!(:artist_role) { create(:role, :artist, user:) }
-        let!(:admin_role) { create(:role, :admin, user: user2) }
+        before do
+          create(:role, :artist, user:)
+          create(:role, :admin, user: user2)
+        end
+
         let(:toker2) { JwtCodec.encode({ user_id: user2.id, iat: issue_time, exp: Time.zone.now.to_i + 3600 }) }
         let(:headers2) { { 'Authorization' => "Bearer #{toker2}" } }
 
@@ -63,7 +66,7 @@ RSpec.describe Api::V1::ArtsController, type: :request do
       end
 
       context 'when the user has an admin role' do
-        let!(:admin_role) { create(:role, :admin, user:) }
+        before { create(:role, :admin, user:) }
 
         it 'DELETE /api/v1/arts/:id allows to delete ANY art' do
           art.update(owner: user2)

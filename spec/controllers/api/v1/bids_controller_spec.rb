@@ -41,7 +41,7 @@ RSpec.describe Api::V1::BidsController, type: :request do
       end
 
       context 'when the user has an buyer role' do
-        let!(:buyer_role) { create(:role, :buyer, user:) }
+        before { create(:role, :buyer, user:) }
 
         it 'POST /api/v1/bids allows you to create a bid on auctions that were NOT created by you' do
           post('/api/v1/bids', params:, headers:)
@@ -59,7 +59,7 @@ RSpec.describe Api::V1::BidsController, type: :request do
       end
 
       context 'when the user has an admin role' do
-        let!(:admin_role) { create(:role, :admin, user:) }
+        before { create(:role, :admin, user:) }
 
         it 'POST /api/v1/bids allows you to create a bid on ANY auction' do
           post('/api/v1/bids', params:, headers:)
