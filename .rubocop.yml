@@ -13,6 +13,7 @@ AllCops:
     - "db/schema.rb"
     - "bin/bundle"
     - "config/**/*"
+    - "vendor/"
 
 Layout/LineLength:
   Exclude:
