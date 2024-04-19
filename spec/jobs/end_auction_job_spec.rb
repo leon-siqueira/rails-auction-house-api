@@ -24,7 +24,7 @@ RSpec.describe EndAuctionJob, type: :job do
       it 'ends the auction, repays bid value to the auction owner and transfers the art to the highest bidder' do
         expect { end_auction }.to change(auction, :status).from('in_progress').to('finished')
                               .and change(Transaction, :count).by(1)
-                              .and change(auction.art, :owner).from(original_art_owner).to(bid2.giver)
+                              .and change(auction.art, :owner).from(original_art_owner).to(winner_bid.giver)
       end
     end
   end
